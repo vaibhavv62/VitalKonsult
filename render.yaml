@@ -1,0 +1,24 @@
+databases:
+  - name: vitalkonsult-db
+    databaseName: vitalkonsult
+    user: vitalkonsult
+    plan: free
+
+services:
+  - type: web
+    name: vitalkonsult-api
+    runtime: python
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: gunicorn backend.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vitalkonsult-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: PYTHON_VERSION
+        value: "3.11.0"
