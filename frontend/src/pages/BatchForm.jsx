@@ -23,7 +23,25 @@ const BatchForm = () => {
         zoom_link: '',
     });
 
-    // ... existing useEffect and fetchTrainers ...
+    const [trainers, setTrainers] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        fetchTrainers();
+        if (isEditMode) {
+            fetchBatch();
+        }
+    }, [id]);
+
+    const fetchTrainers = async () => {
+        try {
+            const response = await api.get('/users/?role=TRAINER');
+            setTrainers(response.data);
+        } catch (err) {
+            console.error("Failed to fetch trainers", err);
+        }
+    };
 
     const fetchBatch = async () => {
         try {
@@ -45,10 +63,34 @@ const BatchForm = () => {
             });
         } catch (err) {
             console.error("Failed to fetch batch", err);
+            setError('Failed to load batch data');
         }
     };
 
-    // ... existing handleChange and handleSubmit ...
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+
+        try {
+            if (isEditMode) {
+                await api.put(`/batches/${id}/`, formData);
+            } else {
+                await api.post('/batches/', formData);
+            }
+            navigate('/batches');
+        } catch (err) {
+            console.error(err);
+            setError('Failed to save batch. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="p-4 md:p-8 max-w-4xl mx-auto">
@@ -230,13 +272,15 @@ const BatchForm = () => {
                     />
                 </div>
 
-                <button
-                    type="submit"
-                    className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700 transition font-bold"
-                    disabled={loading}
-                >
-                    {loading ? 'Processing...' : (isEditMode ? 'Update Batch' : 'Create Batch')}
-                </button>
+                <div className="md:col-span-2">
+                    <button
+                        type="submit"
+                        className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700 transition font-bold"
+                        disabled={loading}
+                    >
+                        {loading ? 'Processing...' : (isEditMode ? 'Update Batch' : 'Create Batch')}
+                    </button>
+                </div>
             </form>
         </div>
     );
