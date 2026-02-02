@@ -21,21 +21,6 @@ const Sidebar = ({ role }) => {
                             Inquiries
                         </Link>
                     </li>
-                    <li>
-                        <Link to="/students" onClick={closeSidebar} className="block p-2 hover:bg-gray-700 rounded">
-                            Students
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/fees" onClick={closeSidebar} className="block p-2 hover:bg-gray-700 rounded">
-                            Fees
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/batches" onClick={closeSidebar} className="block p-2 hover:bg-gray-700 rounded">
-                            Batches
-                        </Link>
-                    </li>
                 </>
             )}
 
@@ -60,6 +45,11 @@ const Sidebar = ({ role }) => {
                     <li>
                         <Link to="/admissions" onClick={closeSidebar} className="block p-2 hover:bg-gray-700 rounded">
                             Admissions
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/students" onClick={closeSidebar} className="block p-2 hover:bg-gray-700 rounded">
+                            Students
                         </Link>
                     </li>
                     <li>
