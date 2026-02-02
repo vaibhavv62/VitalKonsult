@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../api';
 import { useNavigate, useParams } from 'react-router-dom';
+import { COURSE_OPTIONS } from '../constants';
 
 const BatchForm = () => {
     const navigate = useNavigate();
@@ -8,9 +9,9 @@ const BatchForm = () => {
     const isEditMode = !!id;
 
     const [formData, setFormData] = useState({
+        course: '',
         batch_name: '',
         start_date: '',
-        end_date: '',
         trainer: '',
         classroom_name: '',
         start_time: '',
@@ -47,9 +48,9 @@ const BatchForm = () => {
         try {
             const response = await api.get(`/batches/${id}/`);
             setFormData({
+                course: response.data.course || '',
                 batch_name: response.data.batch_name,
                 start_date: response.data.start_date,
-                end_date: response.data.end_date || '',
                 trainer: response.data.trainer || '',
                 classroom_name: response.data.classroom_name || '',
                 start_time: response.data.start_time || '',
@@ -77,11 +78,19 @@ const BatchForm = () => {
         setLoading(true);
         setError('');
 
+        // Create a copy of formData and convert empty strings to null
+        const payload = { ...formData };
+        Object.keys(payload).forEach(key => {
+            if (payload[key] === '') {
+                payload[key] = null;
+            }
+        });
+
         try {
             if (isEditMode) {
-                await api.put(`/batches/${id}/`, formData);
+                await api.put(`/batches/${id}/`, payload);
             } else {
-                await api.post('/batches/', formData);
+                await api.post('/batches/', payload);
             }
             navigate('/batches');
         } catch (err) {
@@ -120,6 +129,26 @@ const BatchForm = () => {
                 </div>
 
                 <div className="mb-4">
+                    <label className="block text-gray-700 font-bold mb-2">Course</label>
+                    <select
+                        name="course"
+                        value={formData.course}
+                        onChange={handleChange}
+                        className="w-full border p-2 rounded"
+                        required
+                    >
+                        <option value="">-- Select Course --</option>
+                        {Object.entries(COURSE_OPTIONS).map(([category, courses]) => (
+                            <optgroup key={category} label={category}>
+                                {courses.map(course => (
+                                    <option key={course} value={course}>{course}</option>
+                                ))}
+                            </optgroup>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="mb-4">
                     <label className="block text-gray-700 font-bold mb-2">Assign Trainer</label>
                     <select
                         name="trainer"
@@ -143,17 +172,6 @@ const BatchForm = () => {
                         onChange={handleChange}
                         className="w-full border p-2 rounded"
                         required
-                    />
-                </div>
-
-                <div className="mb-4">
-                    <label className="block text-gray-700 font-bold mb-2">End Date (Optional)</label>
-                    <input
-                        type="date"
-                        name="end_date"
-                        value={formData.end_date}
-                        onChange={handleChange}
-                        className="w-full border p-2 rounded"
                     />
                 </div>
 

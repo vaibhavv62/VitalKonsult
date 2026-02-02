@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../api';
 import { useNavigate, useParams } from 'react-router-dom';
+import { COURSE_OPTIONS } from '../constants';
 
 const DEGREES = [
     {
@@ -349,19 +350,13 @@ const StudentForm = () => {
                         required
                     >
                         <option value="">-- Select Course --</option>
-                        <option value="Java">Java</option>
-                        <option value="Python">Python</option>
-                        <option value="Cloud Computing">Cloud Computing</option>
-                        <option value="Data Analytics">Data Analytics</option>
-                        <option value="DSA">DSA</option>
-                        <option value="C Programming">C Programming</option>
-                        <option value="C++">C++</option>
-                        <option value="Data Science">Data Science</option>
-                        <option value="UI/UX">UI/UX</option>
-                        <option value="Cyber Security">Cyber Security</option>
-                        <option value="Agentic AI">Agentic AI</option>
-                        <option value="Data Engineering">Data Engineering</option>
-                        <option value="Software Testing">Software Testing</option>
+                        {Object.entries(COURSE_OPTIONS).map(([group, options]) => (
+                            <optgroup key={group} label={group}>
+                                {options.map(option => (
+                                    <option key={option} value={option}>{option}</option>
+                                ))}
+                            </optgroup>
+                        ))}
                     </select>
                 </div>
 
