@@ -17,8 +17,10 @@ const InquiryForm = () => {
         branch: '',
         passout_year: '',
         interested_course: '',
-        source: ''
+        source: '',
+        created_by: '' // New field for counselor assignment
     });
+    const [counselors, setCounselors] = useState([]); // State for counselor list
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -38,6 +40,19 @@ const InquiryForm = () => {
             console.error(err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchCounselors();
+    }, []);
+
+    const fetchCounselors = async () => {
+        try {
+            const response = await api.get('/users/?role=COUNSELOR');
+            setCounselors(response.data);
+        } catch (err) {
+            console.error("Failed to fetch counselors", err);
         }
     };
 
@@ -152,6 +167,25 @@ const InquiryForm = () => {
                     <div>
                         <label className="block text-gray-700">Source</label>
                         <input name="source" value={formData.source} onChange={handleChange} className="w-full border p-2 rounded" required />
+                    </div>
+
+                    {/* Assigned Counselor Dropdown */}
+                    <div>
+                        <label className="block text-gray-700">Assigned Counselor</label>
+                        <select
+                            name="created_by"
+                            value={formData.created_by || ''}
+                            onChange={handleChange}
+                            className="w-full border p-2 rounded"
+                        >
+                            <option value=""> -- Assign to Yourself (Default) -- </option>
+                            {counselors.map(counselor => (
+                                <option key={counselor.id} value={counselor.id}>
+                                    {counselor.username}
+                                </option>
+                            ))}
+                        </select>
+                        <p className="text-xs text-gray-500 mt-1">Leave blank to assign to yourself.</p>
                     </div>
                 </div>
 

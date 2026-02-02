@@ -50,7 +50,10 @@ class InquiryViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+        if 'created_by' not in serializer.validated_data:
+            serializer.save(created_by=self.request.user)
+        else:
+            serializer.save()
 
 class BatchViewSet(viewsets.ModelViewSet):
     serializer_class = BatchSerializer

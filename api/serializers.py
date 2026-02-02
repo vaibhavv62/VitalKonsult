@@ -10,10 +10,12 @@ class InquirySerializer(serializers.ModelSerializer):
     created_by_name = serializers.ReadOnlyField(source='created_by.username')
     is_admitted = serializers.SerializerMethodField()
 
+    created_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
+
     class Meta:
         model = Inquiry
         fields = '__all__'
-        read_only_fields = ['created_by', 'created_at']
+        read_only_fields = ['created_at']
 
     def get_is_admitted(self, obj):
         return hasattr(obj, 'student_profile')

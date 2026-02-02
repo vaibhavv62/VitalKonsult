@@ -77,7 +77,9 @@ const StudentForm = () => {
         batch: '',
         course: '',
         total_fees: '',
+        created_by: '', // New field for counselor assignment
     });
+    const [counselors, setCounselors] = useState([]); // State for counselor list
 
     const [batches, setBatches] = useState([]);
     const [transactions, setTransactions] = useState([]);
@@ -95,6 +97,10 @@ const StudentForm = () => {
         try {
             const batchRes = await api.get('/batches/');
             setBatches(batchRes.data);
+
+            // Also fetch counselors for creation assignment
+            const counselorRes = await api.get('/users/?role=COUNSELOR');
+            setCounselors(counselorRes.data);
         } catch (err) {
             console.error("Failed to fetch dependencies", err);
         }
@@ -174,6 +180,7 @@ const StudentForm = () => {
                     passout_year: formData.passout_year,
                     interested_course: formData.course,
                     source: formData.source,
+                    created_by: formData.created_by || undefined, // Pass counselor ID if selected
                 };
                 const inquiryRes = await api.post('/inquiries/', inquiryPayload);
                 studentData.inquiry = inquiryRes.data.id;
@@ -396,9 +403,28 @@ const StudentForm = () => {
                         value={formData.enrollment_date}
                         onChange={handleChange}
                         className="w-full border p-2 rounded"
-                        required
                     />
                 </div>
+
+                {!isEditMode && admissionMode === 'new' && (
+                    <div className="mb-6">
+                        <label className="block text-gray-700 font-bold mb-2">Assign Counselor</label>
+                        <select
+                            name="created_by"
+                            value={formData.created_by || ''}
+                            onChange={handleChange}
+                            className="w-full border p-2 rounded"
+                        >
+                            <option value=""> -- Assign to Yourself (Default) -- </option>
+                            {counselors.map(counselor => (
+                                <option key={counselor.id} value={counselor.id}>
+                                    {counselor.username}
+                                </option>
+                            ))}
+                        </select>
+                        <p className="text-xs text-gray-500 mt-1">Leave blank to assign to yourself.</p>
+                    </div>
+                )}
 
                 <button
                     type="submit"
