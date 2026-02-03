@@ -118,7 +118,7 @@ class PlacementOutreachViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(officer=self.request.user)
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = User.objects.all()

@@ -62,6 +62,11 @@ const Sidebar = ({ role }) => {
                             Batches
                         </Link>
                     </li>
+                    <li>
+                        <Link to="/users" onClick={closeSidebar} className="block p-2 hover:bg-gray-700 rounded">
+                            Manage Team
+                        </Link>
+                    </li>
                 </>
             )}
 

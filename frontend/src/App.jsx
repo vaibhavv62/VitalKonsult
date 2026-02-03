@@ -16,6 +16,8 @@ import FeeList from './pages/FeeList';
 import FeeForm from './pages/FeeForm';
 import AttendanceList from './pages/AttendanceList';
 import AttendanceForm from './pages/AttendanceForm';
+import UserList from './pages/UserList';
+import UserForm from './pages/UserForm';
 
 // ... existing imports ...
 
@@ -225,6 +227,28 @@ function App() {
               <PrivateRoute>
                 <Dashboard>
                   <AttendanceForm />
+                </Dashboard>
+              </PrivateRoute>
+            }
+          />
+
+          {/* User Management Routes */}
+          <Route
+            path="/users"
+            element={
+              <PrivateRoute>
+                <Dashboard>
+                  <UserList />
+                </Dashboard>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/users/new"
+            element={
+              <PrivateRoute>
+                <Dashboard>
+                  <UserForm />
                 </Dashboard>
               </PrivateRoute>
             }
