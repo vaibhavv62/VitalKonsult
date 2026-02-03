@@ -68,6 +68,56 @@ const BatchDetails = () => {
                 </div>
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                {/* Schedule & Location */}
+                <div className="bg-white p-6 rounded shadow">
+                    <h2 className="text-xl font-bold mb-4 text-gray-800 border-b pb-2">Schedule & Location</h2>
+                    <div className="space-y-3">
+                        <div className="flex justify-between">
+                            <span className="text-gray-600">Classroom:</span>
+                            <span className="font-semibold">{batch.classroom_name || 'Not Set'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-gray-600">Timing:</span>
+                            <span className="font-semibold">{batch.start_time} - {batch.end_time || 'End'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-gray-600">Days:</span>
+                            <span className="font-semibold">{batch.days_of_week || 'Not Set'}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Zoom Details */}
+                <div className="bg-white p-6 rounded shadow">
+                    <h2 className="text-xl font-bold mb-4 text-gray-800 border-b pb-2">Zoom Details</h2>
+                    <div className="space-y-3">
+                        <div>
+                            <span className="block text-gray-600 text-sm">Zoom Link:</span>
+                            {batch.zoom_link ? (
+                                <a href={batch.zoom_link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline break-all">
+                                    {batch.zoom_link}
+                                </a>
+                            ) : (
+                                <span className="text-gray-400">Not Available</span>
+                            )}
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-gray-600">Meeting ID:</span>
+                            <span className="font-semibold select-all">{batch.zoom_meeting_id || 'N/A'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-gray-600">Passcode:</span>
+                            <span className="font-semibold select-all">{batch.zoom_meeting_passcode || 'N/A'}</span>
+                        </div>
+                        <div className="flex justify-between border-t pt-2 mt-2">
+                            <span className="text-gray-600 text-sm">Host Account:</span>
+                            <span className="text-sm font-medium">{batch.zoom_host_account || 'N/A'}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* Students List */}
             <div className="bg-white rounded shadow p-6">
                 <h2 className="text-xl font-bold mb-4 border-b pb-2">Student List</h2>
