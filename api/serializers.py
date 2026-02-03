@@ -47,6 +47,7 @@ class FeeSerializer(serializers.ModelSerializer):
 
 class StudentSerializer(serializers.ModelSerializer):
     inquiry_details = InquirySerializer(source='inquiry', read_only=True)
+    inquiry_name = serializers.ReadOnlyField(source='inquiry.name')
     batch_name = serializers.ReadOnlyField(source='batch.batch_name')
     fees = FeeSerializer(many=True, read_only=True)
 

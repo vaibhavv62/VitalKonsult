@@ -12,6 +12,7 @@ import StudentList from './pages/StudentList';
 import StudentForm from './pages/StudentForm';
 import BatchList from './pages/BatchList';
 import BatchForm from './pages/BatchForm';
+import BatchDetails from './pages/BatchDetails';
 import FeeList from './pages/FeeList';
 import FeeForm from './pages/FeeForm';
 import AttendanceList from './pages/AttendanceList';
@@ -173,6 +174,16 @@ function App() {
               <PrivateRoute>
                 <Dashboard>
                   <BatchForm />
+                </Dashboard>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/batches/:id/view"
+            element={
+              <PrivateRoute>
+                <Dashboard>
+                  <BatchDetails />
                 </Dashboard>
               </PrivateRoute>
             }
