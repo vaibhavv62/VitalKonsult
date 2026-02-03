@@ -106,7 +106,7 @@ const InquiryList = () => {
     if (loading) return <div>Loading inquiries...</div>;
 
     return (
-        <div className="p-4 md:p-8">
+        <div className="w-full">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <h1 className="text-2xl md:text-3xl font-bold">Inquiries</h1>
                 <Link
@@ -128,7 +128,7 @@ const InquiryList = () => {
                         Reset All Filters
                     </button>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Filter by Date</label>
                         <select

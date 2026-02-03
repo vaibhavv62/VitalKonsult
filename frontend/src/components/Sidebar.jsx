@@ -108,14 +108,14 @@ const Sidebar = ({ role }) => {
             {/* Mobile overlay */}
             {isOpen && (
                 <div
-                    className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+                    className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
                     onClick={closeSidebar}
                 />
             )}
 
             {/* Sidebar */}
             <div className={`
-                fixed md:static inset-y-0 left-0 z-40
+                fixed md:static inset-y-0 left-0 z-50
                 w-64 bg-gray-800 text-white min-h-screen p-4
                 transform transition-transform duration-300 ease-in-out
                 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}

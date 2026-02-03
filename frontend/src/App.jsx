@@ -40,28 +40,30 @@ const Dashboard = ({ children }) => {
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar role={role} />
-      <div className="flex-1 p-4 md:p-8 ml-0 md:ml-0">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 mt-12 md:mt-0">
-          <h1 className="text-2xl md:text-3xl font-bold">VitalKonsult</h1>
-          <div className="flex items-center gap-2 md:gap-4 flex-wrap">
-            <span className="text-sm md:text-base">{user?.username} ({role})</span>
-            <button
-              onClick={logout}
-              className="bg-red-500 text-white px-3 py-1.5 md:px-4 md:py-2 rounded hover:bg-red-600 text-sm md:text-base"
-            >
-              Logout
-            </button>
+      <div className="flex-1 ml-0 md:ml-0 overflow-hidden">
+        <div className="max-w-7xl mx-auto p-4 md:p-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 mt-12 md:mt-0">
+            <h1 className="text-2xl md:text-3xl font-bold">VitalKonsult</h1>
+            <div className="flex items-center gap-2 md:gap-4 flex-wrap">
+              <span className="text-sm md:text-base">{user?.username} ({role})</span>
+              <button
+                onClick={logout}
+                className="bg-red-500 text-white px-3 py-1.5 md:px-4 md:py-2 rounded hover:bg-red-600 text-sm md:text-base"
+              >
+                Logout
+              </button>
+            </div>
           </div>
-        </div>
 
-        {children ? children : (
-          <>
-            {role === 'MANAGER' && <ManagerDashboard />}
-            {role === 'HR_ADMIN' && <HRDashboard />}
-            {role === 'TRAINER' && <TrainerDashboard />}
-            {role !== 'MANAGER' && role !== 'HR_ADMIN' && role !== 'TRAINER' && <p>Role-specific dashboard coming soon...</p>}
-          </>
-        )}
+          {children ? children : (
+            <>
+              {role === 'MANAGER' && <ManagerDashboard />}
+              {role === 'HR_ADMIN' && <HRDashboard />}
+              {role === 'TRAINER' && <TrainerDashboard />}
+              {role !== 'MANAGER' && role !== 'HR_ADMIN' && role !== 'TRAINER' && <p>Role-specific dashboard coming soon...</p>}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
