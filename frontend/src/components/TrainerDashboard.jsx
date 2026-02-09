@@ -9,6 +9,10 @@ const TrainerDashboard = () => {
     const [todaysBatches, setTodaysBatches] = useState([]);
     const [expandedBatchId, setExpandedBatchId] = useState(null);
 
+    // Modal state
+    const [showModal, setShowModal] = useState(false);
+    const [selectedBatch, setSelectedBatch] = useState(null);
+
     useEffect(() => {
         fetchBatches();
     }, []);
@@ -37,6 +41,19 @@ const TrainerDashboard = () => {
 
     const toggleExpand = (batchId) => {
         setExpandedBatchId(expandedBatchId === batchId ? null : batchId);
+    };
+
+    const handleStartNow = (batch) => {
+        setSelectedBatch(batch);
+        setShowModal(true);
+    };
+
+    const confirmStart = () => {
+        if (selectedBatch?.zoom_link) {
+            window.open(selectedBatch.zoom_link, '_blank');
+        }
+        setShowModal(false);
+        setSelectedBatch(null);
     };
 
     if (loading) return <div>Loading dashboard...</div>;
@@ -90,10 +107,18 @@ const TrainerDashboard = () => {
                                                 <p className="text-gray-500 italic">No Zoom details available.</p>
                                             )}
                                         </div>
-                                        <div className="ml-6">
+                                        <div className="ml-6 flex flex-col gap-3">
+                                            {batch.zoom_link && (
+                                                <button
+                                                    onClick={() => handleStartNow(batch)}
+                                                    className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 shadow-md transition-transform transform hover:scale-105 text-center font-bold"
+                                                >
+                                                    Start Now
+                                                </button>
+                                            )}
                                             <Link
                                                 to={`/attendance/mark/${batch.id}`}
-                                                className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 shadow-md transition-transform transform hover:scale-105 inline-block"
+                                                className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 shadow-md transition-transform transform hover:scale-105 text-center"
                                             >
                                                 Mark Attendance
                                             </Link>
@@ -115,14 +140,27 @@ const TrainerDashboard = () => {
                     {batches.map(batch => (
                         <div key={batch.id} className="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
                             <h3 className="text-lg font-bold mb-2">{batch.batch_name}</h3>
-                            <p className="text-gray-600 mb-1">Start Date: {batch.start_date}</p>
-                            <p className="text-gray-600 mb-4">End Date: {batch.end_date || 'Ongoing'}</p>
-                            <Link
-                                to={`/attendance/mark/${batch.id}`}
-                                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 inline-block"
-                            >
-                                Mark Attendance
-                            </Link>
+                            <p className="text-gray-600 mb-1 text-sm">Course: {batch.course_name}</p>
+                            <p className="text-gray-600 mb-1 text-sm">Classroom: {batch.classroom_name || 'N/A'}</p>
+                            <p className="text-gray-600 mb-1 text-sm">Time: {batch.start_time} - {batch.end_time || 'N/A'}</p>
+                            <p className="text-gray-600 mb-1 text-sm">Start Date: {batch.start_date}</p>
+                            <p className="text-gray-600 mb-4 text-sm">End Date: {batch.end_date || 'Ongoing'}</p>
+                            <div className="flex gap-2">
+                                {batch.zoom_link && (
+                                    <button
+                                        onClick={() => handleStartNow(batch)}
+                                        className="bg-green-600 text-white px-3 py-1.5 rounded hover:bg-green-700 text-sm font-bold"
+                                    >
+                                        Start Now
+                                    </button>
+                                )}
+                                <Link
+                                    to={`/attendance/mark/${batch.id}`}
+                                    className="bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700 text-sm"
+                                >
+                                    Mark Attendance
+                                </Link>
+                            </div>
                         </div>
                     ))}
                     {batches.length === 0 && (
@@ -130,6 +168,37 @@ const TrainerDashboard = () => {
                     )}
                 </div>
             </div>
+
+            {/* Modal */}
+            {showModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+                        <h3 className="text-xl font-bold mb-4">Start Zoom Meeting</h3>
+                        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                            <p className="text-sm text-yellow-700">
+                                Please check whether you've logged into the Zoom app with the specific Host Account:
+                            </p>
+                            <p className="text-lg font-bold text-yellow-800 mt-2">
+                                {selectedBatch?.zoom_host_account}
+                            </p>
+                        </div>
+                        <div className="flex justify-end gap-3">
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                            >
+                                No, Cancel
+                            </button>
+                            <button
+                                onClick={confirmStart}
+                                className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 font-bold"
+                            >
+                                Yes, Start Meeting
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div>
                 <h2 className="text-xl font-semibold mb-4 text-gray-700">Quick Actions</h2>

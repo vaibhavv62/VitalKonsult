@@ -205,6 +205,8 @@ const InquiryList = () => {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">College</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created By</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Follow-up</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -212,13 +214,23 @@ const InquiryList = () => {
                         {filteredInquiries.map((inquiry) => (
                             <tr key={inquiry.id}>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {new Date(inquiry.created_at).toLocaleDateString()} {new Date(inquiry.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    {new Date(inquiry.created_at).toLocaleDateString()}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">{inquiry.name}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{inquiry.mobile}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{inquiry.interested_course}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">{inquiry.college}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{inquiry.created_by_name}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                        ${inquiry.lead_status === 'HOT' ? 'bg-red-100 text-red-800' :
+                                            inquiry.lead_status === 'WARM' ? 'bg-yellow-100 text-yellow-800' :
+                                                inquiry.lead_status === 'COLD' ? 'bg-blue-100 text-blue-800' :
+                                                    'bg-green-100 text-green-800'}`}>
+                                        {inquiry.lead_status || 'N/A'}
+                                    </span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {inquiry.next_followup_date ? new Date(inquiry.next_followup_date).toLocaleDateString() : '-'}
+                                </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <Link to={`/inquiries/${inquiry.id}`} className="text-indigo-600 hover:text-indigo-900">Edit</Link>
                                 </td>

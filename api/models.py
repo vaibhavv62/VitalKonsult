@@ -30,8 +30,34 @@ class Inquiry(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='inquiries')
     created_at = models.DateTimeField(auto_now_add=True)
 
+    # Sales & Follow-up Fields
+    LEAD_STATUS_CHOICES = [
+        ('HOT', 'Hot'),
+        ('WARM', 'Warm'),
+        ('COLD', 'Cold'),
+        ('ENROLLED', 'Enrolled'),
+    ]
+    lead_status = models.CharField(max_length=20, choices=LEAD_STATUS_CHOICES, default='WARM', blank=True, null=True)
+    remark = models.TextField(blank=True, null=True)
+    fees_told = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    next_followup_date = models.DateField(blank=True, null=True)
+
     def __str__(self):
         return f"{self.name} - {self.interested_course}"
+
+class InquiryFollowup(models.Model):
+    inquiry = models.ForeignKey(Inquiry, on_delete=models.CASCADE, related_name='followups')
+    date = models.DateField(default=timezone.now)
+    status = models.CharField(max_length=50, blank=True, null=True, help_text="Status at time of follow-up e.g. HOT/WARM")
+    remark = models.TextField()
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date', '-created_at']
+
+    def __str__(self):
+        return f"{self.inquiry.name} - {self.date}"
 
 class Batch(models.Model):
     course = models.CharField(max_length=100)

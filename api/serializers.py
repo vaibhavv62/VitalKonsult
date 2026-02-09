@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Inquiry, Batch, Student, Fee, Attendance, PlacementOutreach
+from .models import User, Inquiry, InquiryFollowup, Batch, Student, Fee, Attendance, PlacementOutreach
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -15,9 +15,18 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+class InquiryFollowupSerializer(serializers.ModelSerializer):
+    created_by_name = serializers.ReadOnlyField(source='created_by.username')
+
+    class Meta:
+        model = InquiryFollowup
+        fields = '__all__'
+        read_only_fields = ['created_by']
+
 class InquirySerializer(serializers.ModelSerializer):
     created_by_name = serializers.ReadOnlyField(source='created_by.username')
     is_admitted = serializers.SerializerMethodField()
+    followups = InquiryFollowupSerializer(many=True, read_only=True)
 
     created_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
 
@@ -31,6 +40,7 @@ class InquirySerializer(serializers.ModelSerializer):
 
 class BatchSerializer(serializers.ModelSerializer):
     trainer_name = serializers.ReadOnlyField(source='trainer.username')
+    course_name = serializers.ReadOnlyField(source='course')
 
     class Meta:
         model = Batch
