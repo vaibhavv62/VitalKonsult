@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import Login from './pages/Login';
 import { useContext } from 'react';
@@ -55,14 +56,21 @@ const Dashboard = ({ children }) => {
             </div>
           </div>
 
-          {children ? children : (
-            <>
-              {role === 'MANAGER' && <ManagerDashboard />}
-              {role === 'HR_ADMIN' && <HRDashboard />}
-              {role === 'TRAINER' && <TrainerDashboard />}
-              {role !== 'MANAGER' && role !== 'HR_ADMIN' && role !== 'TRAINER' && <p>Role-specific dashboard coming soon...</p>}
-            </>
-          )}
+          <motion.div
+            key={window.location.pathname} // Simple key to trigger animation on route change if Dashboard re-renders
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            {children ? children : (
+              <>
+                {role === 'MANAGER' && <ManagerDashboard />}
+                {role === 'HR_ADMIN' && <HRDashboard />}
+                {role === 'TRAINER' && <TrainerDashboard />}
+                {role !== 'MANAGER' && role !== 'HR_ADMIN' && role !== 'TRAINER' && <p>Role-specific dashboard coming soon...</p>}
+              </>
+            )}
+          </motion.div>
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DEGREE_OPTIONS, BRANCH_OPTIONS, COURSE_OPTIONS } from '../constants';
+import Swal from 'sweetalert2';
 
 const InquiryForm = () => {
     const navigate = useNavigate();
@@ -75,15 +76,33 @@ const InquiryForm = () => {
         // Mobile Validation
         const mobileRegex = /^[0-9]{10}$/;
         if (!mobileRegex.test(formData.mobile)) {
-            setError('Mobile number must be exactly 10 digits.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Mobile Number',
+                text: 'Mobile number must be exactly 10 digits.',
+            });
             return;
         }
 
         try {
             if (isEditMode) {
                 await api.put(`/inquiries/${id}/`, formData);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Updated!',
+                    text: 'Inquiry details updated successfully.',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
             } else {
                 await api.post('/inquiries/', formData);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Created!',
+                    text: 'New inquiry added successfully.',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
             }
             navigate('/inquiries');
         } catch (err) {
@@ -97,7 +116,11 @@ const InquiryForm = () => {
                     errorMessage += ' ' + JSON.stringify(err.response.data);
                 }
             }
-            setError(errorMessage);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage,
+            });
             console.error(err);
         }
     };
@@ -116,9 +139,22 @@ const InquiryForm = () => {
             if (newFollowup.status && newFollowup.status !== formData.lead_status) {
                 setFormData({ ...formData, lead_status: newFollowup.status });
             }
+            Swal.fire({
+                icon: 'success',
+                title: 'Note Added',
+                text: 'Follow-up note added successfully.',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
         } catch (err) {
             console.error("Failed to add follow-up", err);
-            setError("Failed to add follow-up note.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to add follow-up note.',
+            });
         }
     };
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import api from '../api';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const UserForm = () => {
     const navigate = useNavigate();
@@ -11,7 +12,6 @@ const UserForm = () => {
         role: 'COUNSELOR', // Default role
         phone: ''
     });
-    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     const ROLES = [
@@ -29,14 +29,24 @@ const UserForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError('');
 
         try {
             await api.post('/users/', formData);
+            Swal.fire({
+                icon: 'success',
+                title: 'User Created',
+                text: 'New team member added successfully.',
+                timer: 1500,
+                showConfirmButton: false
+            });
             navigate('/users');
         } catch (err) {
             console.error(err);
-            setError('Failed to create user. Username/Email might already exist.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Creation Failed',
+                text: 'Failed to create user. Username/Email might already exist.',
+            });
         } finally {
             setLoading(false);
         }
@@ -46,11 +56,8 @@ const UserForm = () => {
         <div className="p-4 md:p-8 max-w-lg mx-auto">
             <h1 className="text-2xl md:text-3xl font-bold mb-6">Add New Team Member</h1>
 
-            {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    {error}
-                </div>
-            )}
+
+            {/* Error display removed, using SweetAlert2 instead */}
 
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md space-y-4">
                 <div>
